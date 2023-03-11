@@ -51,4 +51,35 @@ class AddProductControllerTest extends WebTestCase
         $this->client->request('PUT', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c/b832e983-6159-47db-a98f-575a46d9544c');
         self::assertResponseStatusCodeSame(404);
     }
+
+    public function test_add_same_product_multiple_and_delete(): void
+    {
+        $this->client->request('PUT', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c/9670ea5b-d940-4593-a2ac-4589be784203');
+        self::assertResponseStatusCodeSame(202);
+
+        $this->client->request('PUT', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c/9670ea5b-d940-4593-a2ac-4589be784203');
+        self::assertResponseStatusCodeSame(202);
+
+        $this->client->request('PUT', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c/9670ea5b-d940-4593-a2ac-4589be784203');
+        self::assertResponseStatusCodeSame(202);
+
+        $this->client->request('GET', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c');
+        self::assertResponseStatusCodeSame(200);
+
+        $response = $this->getJsonResponse();
+
+        self::assertCount(1, $response['products']);
+        self::assertEquals(3, $response['products'][0]['count']);
+
+        $this->client->request('DELETE', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c/9670ea5b-d940-4593-a2ac-4589be784203');
+        self::assertResponseStatusCodeSame(202);
+
+        $this->client->request('GET', '/cart/5bd88887-7017-4c08-83de-8b5d9abde58c');
+        self::assertResponseStatusCodeSame(200);
+
+        $response = $this->getJsonResponse();
+
+        self::assertCount(1, $response['products']);
+        self::assertEquals(2, $response['products'][0]['count']);
+    }
 }

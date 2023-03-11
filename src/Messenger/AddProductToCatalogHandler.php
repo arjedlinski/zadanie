@@ -7,6 +7,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class AddProductToCatalogHandler implements MessageHandlerInterface
 {
+    //todo: readonly
     public function __construct(private ProductService $service) { }
 
     public function __invoke(AddProductToCatalog $command): void

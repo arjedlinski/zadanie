@@ -21,6 +21,10 @@ class ListController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
+
+        //todo: we should refactor what if we extend service and we need paginator in other places.
+        //https://www.plutora.com/blog/understanding-the-dry-dont-repeat-yourself-principle
+        //maybe implement some tool i.e elastic search to handle tons of products etc.
         $page = max(0, (int)$request->get('page', 0));
 
         $products = $this->productProvider->getProducts($page, self::MAX_PER_PAGE);

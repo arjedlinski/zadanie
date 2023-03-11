@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExceptionListener
 {
+    //todo: readonly
     public function __construct(private ErrorBuilder $errorBuilder) {}
 
     public function onKernelException(ExceptionEvent $event): void

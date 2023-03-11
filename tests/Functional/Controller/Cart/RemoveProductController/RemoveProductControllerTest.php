@@ -13,14 +13,26 @@ class RemoveProductControllerTest extends WebTestCase
         $this->loadFixtures(new RemoveProductControllerFixture());
     }
 
-    public function test_removes_product_form_cart(): void
+    public function test_removes_product_from_cart(): void
     {
+        $this->client->request('GET', '/cart/97e385fe-9876-45fc-baa0-4f2f0df90950');
+
+        self::assertResponseStatusCodeSame(200);
+
+        $response = $this->getJsonResponse();
+
+        self::assertCount(1, $response['products']);
+
         $this->client->request('DELETE', '/cart/97e385fe-9876-45fc-baa0-4f2f0df90950/d11e1e69-cca7-40a1-8273-9d93c8346efd');
+
         self::assertResponseStatusCodeSame(202);
 
         $this->client->request('GET', '/cart/97e385fe-9876-45fc-baa0-4f2f0df90950');
+
         self::assertResponseStatusCodeSame(200);
+
         $response = $this->getJsonResponse();
+
         self::assertCount(0, $response['products']);
     }
 

@@ -1,0 +1,5 @@
+#komentarze w kodzie w todo list;
+#jeśli przetrzymujemy price w cart że 1 = 1 grosz to jest to ok, natomiast przydałoby się przekonwertować to jakąś
+user friendly wartość, np użyć z dostępnych w sieci bundli.
+#zmiana annotacji na atrybuty,
+#dodanie validacji przed dispatchem

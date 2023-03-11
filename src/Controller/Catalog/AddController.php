@@ -26,6 +26,7 @@ class AddController extends AbstractController implements MessageBusAwareInterfa
         $name = trim($request->get('name'));
         $price = (int)$request->get('price');
 
+        //todo: https://symfony.com/doc/current/validation.html
         if ($name === '' || $price < 1) {
             return new JsonResponse(
                 $this->errorBuilder->__invoke('Invalid name or price.'),

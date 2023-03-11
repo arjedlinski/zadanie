@@ -8,12 +8,17 @@ use App\Service\Catalog\ProductService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+//todo: Why we dont extend Service Entity repository and manually injecting entity manager?
 class ProductRepository implements ProductProvider, ProductService
 {
     private EntityRepository $repository;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct
+    (
+        private EntityManagerInterface $entityManager,
+    )
     {
         $this->repository = $this->entityManager->getRepository(\App\Entity\Product::class);
     }
@@ -23,6 +28,7 @@ class ProductRepository implements ProductProvider, ProductService
         return $this->repository->createQueryBuilder('p')
             ->setMaxResults($count)
             ->setFirstResult($page * $count)
+            ->orderBy('p.createdAt', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -38,6 +44,7 @@ class ProductRepository implements ProductProvider, ProductService
         return $this->repository->find($productId) !== null;
     }
 
+    //todo: I dont see any place that we using return statement;
     public function add(string $name, int $price): Product
     {
         $product = new \App\Entity\Product(Uuid::uuid4(), $name, $price);
@@ -55,5 +62,21 @@ class ProductRepository implements ProductProvider, ProductService
             $this->entityManager->remove($product);
             $this->entityManager->flush();
         }
+    }
+
+    public function changeName(string $id, string $name): void
+    {
+        $product = $this->repository->find($id);
+        $product->setName($name);
+
+        $this->entityManager->flush();
+    }
+
+    public function changePrice(string $id, int $price): void
+    {
+        $product = $this->repository->find($id);
+        $product->setPrice($price);
+
+        $this->entityManager->flush();
     }
 }

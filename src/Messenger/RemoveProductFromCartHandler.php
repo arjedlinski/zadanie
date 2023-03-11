@@ -2,7 +2,6 @@
 
 namespace App\Messenger;
 
-use App\Service\Cart\Cart;
 use App\Service\Cart\CartService;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

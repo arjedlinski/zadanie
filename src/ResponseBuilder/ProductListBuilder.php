@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductListBuilder
 {
+    //todo: readonly
     public function __construct(private UrlGeneratorInterface $urlGenerator) { }
 
     /**
@@ -21,20 +22,23 @@ class ProductListBuilder
             'products' => []
         ];
 
+        //todo: maybe some refactor.
         if ($page > 0) {
             $data['previous_page'] = $this->urlGenerator->generate('product-list', ['page' => $page - 1]);
         }
 
+        //todo: maybe some refactor.
         $lastPage = ceil($totalCount / $maxPerPage);
         if ($page < $lastPage - 1) {
             $data['next_page'] = $this->urlGenerator->generate('product-list', ['page' => $page + 1]);
         }
 
+        //todo: normalization
         foreach ($products as $product) {
             $data['products'][] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
-                'price' => $product->getPrice()
+                'price' => $product->getPrice(),
             ];
         }
 

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\ValueObject\NameValueObject;
+use App\Entity\ValueObject\PriceValueObject;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -13,17 +15,21 @@ class Product implements \App\Service\Catalog\Product
     #[ORM\Column(type: 'uuid', nullable: false)]
     private UuidInterface $id;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private string $name;
+    #[ORM\Column(type: 'datetime', nullable: false)]
+    private \DateTime $createdAt;
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private string $priceAmount;
+    #[ORM\Embedded(class: NameValueObject::class)]
+    private NameValueObject $nameValueObject;
 
-    public function __construct(string $id, string $name, int $price)
+    #[ORM\Embedded(class: PriceValueObject::class)]
+    private PriceValueObject $priceValueObject;
+
+    public function __construct(string $id, string $name, int $price, \DateTime $dateTime = new \DateTime())
     {
         $this->id = Uuid::fromString($id);
-        $this->name = $name;
-        $this->priceAmount = $price;
+        $this->priceValueObject = new PriceValueObject($price);
+        $this->nameValueObject = new NameValueObject($name);
+        $this->createdAt = $dateTime;
     }
 
     public function getId(): string
@@ -33,11 +39,42 @@ class Product implements \App\Service\Catalog\Product
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->nameValueObject->getName();
     }
 
     public function getPrice(): int
     {
-        return $this->priceAmount;
+        return $this->priceValueObject->getPrice();
     }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getNameValueObject(): NameValueObject
+    {
+        return $this->nameValueObject;
+    }
+
+    public function getPriceValueObject(): PriceValueObject
+    {
+        return $this->priceValueObject;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->nameValueObject->setName($name);
+
+        return $this;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->priceValueObject->setPrice($price);
+
+        return $this;
+    }
+
+
 }

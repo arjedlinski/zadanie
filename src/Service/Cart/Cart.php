@@ -2,6 +2,7 @@
 
 namespace App\Service\Cart;
 
+use App\Entity\CartProduct;
 use App\Service\Catalog\Product;
 
 interface Cart
@@ -10,7 +11,7 @@ interface Cart
     public function getTotalPrice(): int;
     public function isFull(): bool;
     /**
-     * @return Product[]
+     * @return CartProduct[]
      */
     public function getProducts(): iterable;
 }
